@@ -4,14 +4,12 @@ import com.demo.webrtc.config.shiro.FirstShiroRealm;
 import com.demo.webrtc.config.shiro.SecondShiroRealm;
 import org.apache.shiro.authc.pam.AtLeastOneSuccessfulStrategy;
 import org.apache.shiro.authc.pam.ModularRealmAuthenticator;
-import org.apache.shiro.realm.Realm;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -48,20 +46,22 @@ public class ShiroConfig {
         ShiroFilterFactoryBean shiroFilter = new ShiroFilterFactoryBean();
 
         Map<String,String> map = new LinkedHashMap<>();
-        map.put("/login","anon");
-        map.put("/test","anon");
-        map.put("/logout","logout");
+        // 公開接口允許匿名訪問
+        map.put("/pub/**","anon");
 
 //        map.put("/manage","perms[manage]");
-        map.put("/admin","roles[admin]");
-        map.put("/manage","roles[manage]");
+        map.put("/sysmgr/admin","roles[admin]");
+        map.put("/sysmgr/manage","roles[manage]");
 
-//        map.put("/**","authc");
-        map.put("/**","anon");
+        // 敏感接口需驗證
+        map.put("/sysmgr/**","authc");
 
-        //设置登录页面
-        shiroFilter.setLoginUrl("/login");
-        //未授权页面
+        map.put("/**","authc");
+//        map.put("/**","anon");
+
+        //設置登入頁面
+        shiroFilter.setLoginUrl("/pub/login");
+        //未授權頁面
         shiroFilter.setUnauthorizedUrl("/authc");
         shiroFilter.setFilterChainDefinitionMap(map);
 
@@ -80,11 +80,12 @@ public class ShiroConfig {
     @Bean
     public DefaultWebSecurityManager manager(@Qualifier("authenticator") ModularRealmAuthenticator modularRealmAuthenticator){
         DefaultWebSecurityManager manager = new DefaultWebSecurityManager();
-        manager.setAuthenticator(modularRealmAuthenticator);
-        ArrayList<Realm> realms = new ArrayList<>();
-        realms.add(this.firRealm());
-        realms.add(this.secRealm());
-        manager.setRealms(realms);
+        manager.setRealm(this.firRealm());
+//        manager.setAuthenticator(modularRealmAuthenticator);
+//        ArrayList<Realm> realms = new ArrayList<>();
+//        realms.add(this.firRealm());
+//        realms.add(this.secRealm());
+//        manager.setRealms(realms);
         return manager;
     }
 

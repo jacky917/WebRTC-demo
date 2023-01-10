@@ -5,65 +5,48 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
  * <p>
- * 用户表
+ * 角色表
  * </p>
  *
  * @author jacky917
- * @since 2023-01-02
+ * @since 2023-01-10
  */
 @Getter
 @Setter
-@ToString
-@TableName("wr_user")
-public class WrUser implements Serializable {
+@TableName("wr_role")
+public class WrRole implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     /**
-     * 自增主鍵
+     * 自增主键
      */
     @TableId(value = "id", type = IdType.AUTO)
     private Long id;
 
     /**
-     * 帳號
-     */
-    private String account;
-
-    /**
-     * 姓名
+     * 角色名称
      */
     private String name;
 
     /**
-     * 密碼
+     * 角色描述
      */
-    private String password;
+    private String roleDesc;
 
     /**
-     * 信箱
+     * 有效标志
      */
-    private String email;
+    private String ynFlag;
 
     /**
-     * 上次修改密碼時間
-     */
-    private LocalDateTime lastPwdModifiedTime;
-
-    /**
-     * 狀態
-     */
-    private String status;
-
-    /**
-     * 創建人
+     * 创建人
      */
     private String creator;
 
@@ -73,17 +56,12 @@ public class WrUser implements Serializable {
     private String editor;
 
     /**
-     * 有效標示(1:有效,0:無效)
-     */
-    private String ynFlag;
-
-    /**
-     * 創建時間
+     * 创建时间
      */
     private LocalDateTime createdTime;
 
     /**
-     * 修改時間
+     * 修改时间
      */
     private LocalDateTime modifiedTime;
 
