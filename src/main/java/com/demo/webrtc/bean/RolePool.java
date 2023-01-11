@@ -11,13 +11,13 @@ import java.util.HashMap;
 import java.util.List;
 
 @Configuration
-public class RoleConfig {
+public class RolePool {
 
     @Autowired
     WrRoleMapper roleMapper;
 
     @Bean
-    public HashMap<String, WrRole> RoleName(){
+    public HashMap<String, WrRole> getRoles(){
         List<WrRole> wrRoles = roleMapper.selectList(null);
         HashMap<String, WrRole> hashMap = new HashMap<>();
         for(WrRole role : wrRoles){
@@ -25,5 +25,4 @@ public class RoleConfig {
         }
         return hashMap;
     }
-
 }

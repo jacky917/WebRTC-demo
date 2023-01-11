@@ -42,8 +42,8 @@ public class FirstShiroRealm extends AuthorizingRealm {
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principalCollection) {
         WrUser user = (WrUser)principalCollection.getPrimaryPrincipal();
-//        System.out.println("AuthorizationInfo: " + principalCollection.fromRealm(getName()).iterator().next());
-        System.out.println("AuthorizationInfo: " + user);
+//        log.info("AuthorizationInfo: " + principalCollection.fromRealm(getName()).iterator().next());
+        log.info("AuthorizationInfo: " + user);
 
         HashSet<String> roles = new HashSet<>();
 
@@ -52,7 +52,7 @@ public class FirstShiroRealm extends AuthorizingRealm {
         //TODO 目前直接查出來注入Bean裡面，之後考慮用Redis實現。
         for(WrUserRole role : sqlRoles){
             roles.add(accountService.getRoleByID(role.getId()).getName());
-            System.out.println("Add role: " + accountService.getRoleByID(role.getId()).getName());
+            log.info("Add role: " + accountService.getRoleByID(role.getId()).getName());
         }
         return new SimpleAuthorizationInfo(roles);
     }
@@ -106,7 +106,7 @@ public class FirstShiroRealm extends AuthorizingRealm {
         ByteSource credentialsSalt = ByteSource.Util.bytes("admin");
         int hashIterations = 1024;
         SimpleHash simpleHash = new SimpleHash(hashAlgorithmName, credentials, credentialsSalt, hashIterations);
-        System.out.println(simpleHash);
+        log.info(String.valueOf(simpleHash));
     }
 
 }

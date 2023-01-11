@@ -2,6 +2,7 @@ package com.demo.webrtc.controller;
 
 
 import com.demo.webrtc.constant.Constants;
+import com.demo.webrtc.domain.entity.WrUser;
 import com.demo.webrtc.domain.vo.Result;
 import com.demo.webrtc.domain.vo.sysmgr.UserVo;
 import lombok.extern.slf4j.Slf4j;
@@ -26,13 +27,12 @@ public class PubController {
     @RequestMapping(value = "/login" ,method = {RequestMethod.POST})
     public Result<String> login(HttpServletResponse response, @Validated UserVo userVo){
 
-        System.out.println(userVo);
-        System.out.println("====================================");
-        System.out.println("Username = " + userVo.getUsername());
-        System.out.println("Password = " + userVo.getPassword());
-        System.out.println("====================================");
+        log.info(String.valueOf(userVo));
+        log.info("====================================");
+        log.info("Username = " + userVo.getUsername());
+        log.info("Password = " + userVo.getPassword());
+        log.info("====================================");
         Subject currentUser = SecurityUtils.getSubject();
-
         if(!currentUser.isAuthenticated()){
             UsernamePasswordToken token = new UsernamePasswordToken(userVo.getUsername(),userVo.getPassword());
             token.setRememberMe(Boolean.parseBoolean(userVo.getRemember()));
@@ -47,6 +47,24 @@ public class PubController {
             }
         }
         return new Result<>(true, "login success", userVo.getUsername(), Constants.TOKEN_CHECK_SUCCESS);
+    }
 
+    @ResponseBody
+    @RequestMapping(value = "/logout" ,method = {RequestMethod.GET,RequestMethod.POST})
+    public Result<String> logout(HttpServletResponse response){
+        Subject currentUser = SecurityUtils.getSubject();
+        if(currentUser.isAuthenticated()){
+            StringBuilder role = new StringBuilder();
+            for(Object o : currentUser.getPrincipals()){
+                WrUser s = (WrUser) o;
+                role.append(s.getAccount()).append(",");
+            }
+            log.info("================登出================");
+            log.info("Username = " + role);
+            log.info("===================================");
+            currentUser.logout();
+            return new Result<>(true, "logout success", role.toString(), Constants.TOKEN_CHECK_SUCCESS);
+        }
+        return new Result<>(false,"logout failed", "", Constants.PARAMETERS_MISSING);
     }
 }

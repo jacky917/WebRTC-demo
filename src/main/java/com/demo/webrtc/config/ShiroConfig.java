@@ -61,6 +61,8 @@ public class ShiroConfig {
 
         //設置登入頁面
         shiroFilter.setLoginUrl("/pub/login");
+
+
         //未授權頁面
         shiroFilter.setUnauthorizedUrl("/authc");
         shiroFilter.setFilterChainDefinitionMap(map);

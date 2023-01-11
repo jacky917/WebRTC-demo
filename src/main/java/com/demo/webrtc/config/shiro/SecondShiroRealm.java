@@ -1,5 +1,6 @@
 package com.demo.webrtc.config.shiro;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
 import org.apache.shiro.authz.AuthorizationInfo;
@@ -11,6 +12,7 @@ import org.apache.shiro.util.ByteSource;
 
 import java.util.HashSet;
 
+@Slf4j
 public class SecondShiroRealm extends AuthorizingRealm {
 
     public SecondShiroRealm() {
@@ -31,7 +33,7 @@ public class SecondShiroRealm extends AuthorizingRealm {
      */
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principalCollection) {
-        System.out.println("AuthorizationInfo: " + principalCollection);
+        log.info("AuthorizationInfo: " + principalCollection);
 
         HashSet<String> roles = new HashSet<>();
         roles.add(principalCollection.toString());
@@ -48,7 +50,7 @@ public class SecondShiroRealm extends AuthorizingRealm {
      */
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenticationToken) throws AuthenticationException {
-        System.out.println("SecondShiroRealm: " + authenticationToken);
+        log.info("SecondShiroRealm: " + authenticationToken);
         UsernamePasswordToken usernamePasswordToken = (UsernamePasswordToken) authenticationToken;
 
         String username = usernamePasswordToken.getUsername();
@@ -57,10 +59,10 @@ public class SecondShiroRealm extends AuthorizingRealm {
             sb.append(ch);
         String password = sb.toString();
 
-        System.out.println("Username = " + username);
+        log.info("Username = " + username);
         if (!"admin".equals(usernamePasswordToken.getUsername()))
             return null;
-        System.out.println("Password = " + password);
+        log.info("Password = " + password);
         // 認證的實體信息。可以是username，也可以是數據表對應用戶的實體類對象
         Object principal = username;
         Object credentials = "ce2f6417c7e1d32c1d81a797ee0b499f87c5de06";
@@ -78,7 +80,7 @@ public class SecondShiroRealm extends AuthorizingRealm {
         ByteSource credentialsSalt = ByteSource.Util.bytes("admin");
         int hashIterations = 1024;
         SimpleHash simpleHash = new SimpleHash(hashAlgorithmName, credentials, credentialsSalt, hashIterations);
-        System.out.println(simpleHash);
+        log.info(simpleHash.toString());
     }
 
 }

@@ -1,8 +1,10 @@
 package com.demo.webrtc.service;
 
+import com.demo.webrtc.domain.entity.Connection;
 import com.demo.webrtc.domain.entity.WrRole;
 import com.demo.webrtc.domain.entity.WrUser;
 import com.demo.webrtc.domain.entity.WrUserRole;
+import org.apache.shiro.subject.Subject;
 
 import java.util.List;
 
@@ -63,5 +65,12 @@ public interface AccountService {
      * @return 權限名
      */
     WrRole getRoleByID(Long RoleID);
+
+    /**
+     * 構建會話對象
+     * @param subject Shiro角色對象
+     * @return Connection 會話對象
+     */
+    Connection getConnection(Subject subject);
 
 }

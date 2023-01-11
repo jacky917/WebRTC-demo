@@ -1,14 +1,16 @@
 package com.demo.webrtc;
 
-import com.demo.webrtc.bean.RoleConfig;
+import com.demo.webrtc.bean.RolePool;
 import com.demo.webrtc.domain.entity.WrRole;
 import com.demo.webrtc.service.AccountService;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.HashMap;
 
+@Slf4j
 @SpringBootTest
 class WebRtcApplicationTests {
 
@@ -30,29 +32,32 @@ class WebRtcApplicationTests {
 
     @Test
     void AccountServiceTest(){
-        System.out.println("=====================================");
-        System.out.println(accountService.findUserByUserID("1").getAccount());
-        System.out.println("-------------------------");
-        System.out.println(accountService.findUserByUserName("admin").getAccount());
-        System.out.println("-------------------------");
-        System.out.println(accountService.findRolesByUserID("1"));
-        System.out.println("-------------------------");
-        System.out.println(accountService.findRolesByUserName("admin"));
-        System.out.println("-------------------------");
-        System.out.println(accountService.getRoleByID("1").getName());
-        System.out.println(accountService.getRoleByID("2").getName());
-        System.out.println(accountService.getRoleByID("3").getName());
-        System.out.println("=====================================");
+        log.info("=====================================");
+        log.info(accountService.findUserByUserID("1").getAccount());
+        log.info("-------------------------");
+        log.info(accountService.findUserByUserName("admin").getAccount());
+        log.info("-------------------------");
+        log.info(accountService.findRolesByUserID("1").toString());
+        log.info("-------------------------");
+        log.info(accountService.findRolesByUserName("admin").toString());
+        log.info("-------------------------");
+        log.info(accountService.getRoleByID("1").getName());
+        log.info(accountService.getRoleByID("2").getName());
+        log.info(accountService.getRoleByID("3").getName());
+        log.info("=====================================");
     }
 
     @Autowired
-    RoleConfig roleConfig;
+    RolePool rolePool;
+
+    @Autowired
+
 
     @Test
     void RoleConfigTest(){
-        HashMap<String, WrRole> hashMap = roleConfig.RoleName();
+        HashMap<String, WrRole> hashMap = rolePool.getRoles();
         for(String key : hashMap.keySet()){
-            System.out.println(key);
+            log.info(key);
         }
     }
 
