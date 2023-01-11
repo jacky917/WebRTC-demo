@@ -1,4 +1,4 @@
-package com.demo.webrtc.config.shiro;
+package com.demo.webrtc.config.shiro.realm;
 
 import com.demo.webrtc.domain.entity.WrUser;
 import com.demo.webrtc.domain.entity.WrUserRole;

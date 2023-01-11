@@ -50,9 +50,6 @@ class WebRtcApplicationTests {
     @Autowired
     RolePool rolePool;
 
-    @Autowired
-
-
     @Test
     void RoleConfigTest(){
         HashMap<String, WrRole> hashMap = rolePool.getRoles();
@@ -60,5 +57,4 @@ class WebRtcApplicationTests {
             log.info(key);
         }
     }
-
 }

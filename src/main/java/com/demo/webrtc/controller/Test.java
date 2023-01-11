@@ -3,11 +3,13 @@ package com.demo.webrtc.controller;
 import com.demo.webrtc.constant.Constants;
 import com.demo.webrtc.domain.entity.WrUser;
 import com.demo.webrtc.domain.vo.Result;
+import com.demo.webrtc.service.AccountService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @Slf4j
@@ -15,13 +17,30 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/")
 public class Test {
 
+    @Autowired
+    AccountService accountService;
+
+    @RequestMapping(value = "/pub/whoami", method = {RequestMethod.POST, RequestMethod.GET})
+    public String pubRedirect() {
+        WrUser user = accountService.getCurrentUser();
+        return (user != null) ? user.getAccount() : null;
+    }
+
+    @RequestMapping(value = "/websocket", method = {RequestMethod.POST, RequestMethod.GET})
+    public String websocketTest() {
+        return "websocket";
+    }
+
+
     @RequestMapping(value = "/pub/{url}", method = {RequestMethod.POST, RequestMethod.GET})
     public String pubRedirect(@PathVariable String url) {
         StringBuilder role = new StringBuilder();
         Subject subject = SecurityUtils.getSubject();
-        for(Object o : subject.getPrincipals()){
-            WrUser s = (WrUser) o;
-            role.append(s.getAccount()).append(",");
+        if (subject.isAuthenticated()) {
+            for (Object o : subject.getPrincipals()) {
+                WrUser s = (WrUser) o;
+                role.append(s.getAccount()).append(",");
+            }
         }
         return "redirect : " + url + "\nroles : " + role;
     }
@@ -33,20 +52,20 @@ public class Test {
 
     @RequestMapping(value = "/pub/loginTest", method = {RequestMethod.POST, RequestMethod.GET})
     public Result<String> login(@RequestParam("username") String username,
-                        @RequestParam("password") String password) {
+                                @RequestParam("password") String password) {
 
-        if(username == null || password == null)
+        if (username == null || password == null)
             return new Result<>(false, "login failed", username, Constants.PARAMETERS_MISSING);
         Subject currentUser = SecurityUtils.getSubject();
-        if(!currentUser.isAuthenticated()){
-            UsernamePasswordToken token = new UsernamePasswordToken(username,password);
+        if (!currentUser.isAuthenticated()) {
+            UsernamePasswordToken token = new UsernamePasswordToken(username, password);
             token.setRememberMe(true);
-            try{
+            try {
                 currentUser.login(token);
-            }catch (AuthenticationException ae){
+            } catch (AuthenticationException ae) {
                 log.info("登入失敗 AuthenticationException " + ae.getMessage());
                 return new Result<>(false, "login failed", username, Constants.PARAMETERS_MISSING);
-            }catch (Exception e){
+            } catch (Exception e) {
                 log.info("登入失敗 Exception " + e.getMessage());
                 return new Result<>(false, "login failed", username, Constants.SERVER_ERROR);
             }

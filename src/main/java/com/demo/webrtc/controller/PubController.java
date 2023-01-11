@@ -28,10 +28,10 @@ public class PubController {
     public Result<String> login(HttpServletResponse response, @Validated UserVo userVo){
 
         log.info(String.valueOf(userVo));
-        log.info("====================================");
-        log.info("Username = " + userVo.getUsername());
-        log.info("Password = " + userVo.getPassword());
-        log.info("====================================");
+//        log.info("====================================");
+//        log.info("Username = " + userVo.getUsername());
+//        log.info("Password = " + userVo.getPassword());
+//        log.info("====================================");
         Subject currentUser = SecurityUtils.getSubject();
         if(!currentUser.isAuthenticated()){
             UsernamePasswordToken token = new UsernamePasswordToken(userVo.getUsername(),userVo.getPassword());

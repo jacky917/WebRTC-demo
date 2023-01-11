@@ -10,6 +10,8 @@ import com.demo.webrtc.mapper.WrUserMapper;
 import com.demo.webrtc.mapper.WrUserRoleMapper;
 import com.demo.webrtc.service.AccountService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.UnavailableSecurityManagerException;
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,6 +30,29 @@ public class AccountServiceImpl implements AccountService {
 
     @Autowired
     RolePool rolePool;
+
+    @Override
+    public WrUser getCurrentUser() {
+        try{
+            Subject currentUser = SecurityUtils.getSubject();
+            return findUserBySubject(currentUser);
+        }catch (UnavailableSecurityManagerException e){
+            log.error("請通過Controller調用此方法");
+            log.error(String.valueOf(e));
+            return null;
+        }
+    }
+
+    @Override
+    public WrUser findUserBySubject(Subject subject) {
+        if(subject.isAuthenticated()){
+            for (Object o : subject.getPrincipals()) {
+                return (WrUser)o;
+            }
+        }
+        // 未登入
+        return null;
+    }
 
     @Override
     public WrUser findUserByUserID(String userID) {
@@ -75,16 +100,12 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public Connection getConnection(Subject currentUser) {
-        // TODO
-        StringBuilder role = new StringBuilder();
-        for(Object o : currentUser.getPrincipals()){
-            WrUser s = (WrUser) o;
-            role.append(s.getAccount()).append(",");
-        }
-        log.info("================登出================");
-        log.info("Username = " + role);
-        log.info("===================================");
-        currentUser.logout();
+//        StringBuilder role = new StringBuilder();
+//        currentUser.getPrincipals()
+//        for(Object o : currentUser.getPrincipals()){
+//            WrUser s = (WrUser) o;
+//            role.append(s.getAccount()).append(",");
+//        }
         return null;
     }
 }

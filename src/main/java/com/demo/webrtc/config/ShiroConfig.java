@@ -1,7 +1,8 @@
 package com.demo.webrtc.config;
 
-import com.demo.webrtc.config.shiro.FirstShiroRealm;
-import com.demo.webrtc.config.shiro.SecondShiroRealm;
+import com.demo.webrtc.config.roleFilter.AtLeastOneRoleFilter;
+import com.demo.webrtc.config.shiro.realm.FirstShiroRealm;
+import com.demo.webrtc.config.shiro.realm.SecondShiroRealm;
 import org.apache.shiro.authc.pam.AtLeastOneSuccessfulStrategy;
 import org.apache.shiro.authc.pam.ModularRealmAuthenticator;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
@@ -10,6 +11,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import javax.servlet.Filter;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -45,6 +47,11 @@ public class ShiroConfig {
     public ShiroFilterFactoryBean filterFactoryBean(@Qualifier("manager") DefaultWebSecurityManager manager){
         ShiroFilterFactoryBean shiroFilter = new ShiroFilterFactoryBean();
 
+        // 自定義角色認證
+        Map<String, Filter> filter = new LinkedHashMap<>();
+        filter.put("atLeastOneRole",new AtLeastOneRoleFilter());
+        shiroFilter.setFilters(filter);
+
         Map<String,String> map = new LinkedHashMap<>();
         // 公開接口允許匿名訪問
         map.put("/pub/**","anon");
@@ -52,16 +59,18 @@ public class ShiroConfig {
 //        map.put("/manage","perms[manage]");
         map.put("/sysmgr/admin","roles[admin]");
         map.put("/sysmgr/manage","roles[manage]");
+        map.put("/websocket","atLeastOneRole[admin,vip,account]");
+
 
         // 敏感接口需驗證
         map.put("/sysmgr/**","authc");
 
         map.put("/**","authc");
+
 //        map.put("/**","anon");
 
         //設置登入頁面
         shiroFilter.setLoginUrl("/pub/login");
-
 
         //未授權頁面
         shiroFilter.setUnauthorizedUrl("/authc");
