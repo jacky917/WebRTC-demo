@@ -53,6 +53,10 @@ public class ShiroConfig {
         shiroFilter.setFilters(filter);
 
         Map<String,String> map = new LinkedHashMap<>();
+
+        //測試接口全公開
+        map.put("/**","anon");
+
         // 公開接口允許匿名訪問
         map.put("/pub/**","anon");
 
@@ -65,7 +69,7 @@ public class ShiroConfig {
         // 敏感接口需驗證
         map.put("/sysmgr/**","authc");
 
-        map.put("/**","authc");
+//        map.put("/**","authc");
 
 //        map.put("/**","anon");
 

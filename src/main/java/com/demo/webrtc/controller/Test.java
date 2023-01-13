@@ -21,29 +21,30 @@ public class Test {
     AccountService accountService;
 
     @RequestMapping(value = "/pub/whoami", method = {RequestMethod.POST, RequestMethod.GET})
-    public String pubRedirect() {
+    public Result<String> pubRedirect() {
         WrUser user = accountService.getCurrentUser();
-        return (user != null) ? user.getAccount() : null;
+        System.out.println((user != null) ? user.getAccount() : null);
+        return new Result<>(true, "whoami", (user != null) ? user.getAccount() : null, Constants.TOKEN_CHECK_SUCCESS);
     }
 
-    @RequestMapping(value = "/websocket", method = {RequestMethod.POST, RequestMethod.GET})
-    public String websocketTest() {
-        return "websocket";
-    }
+//    @RequestMapping(value = "/websocket", method = {RequestMethod.POST, RequestMethod.GET})
+//    public String websocketTest() {
+//        return "websocket";
+//    }
 
 
-    @RequestMapping(value = "/pub/{url}", method = {RequestMethod.POST, RequestMethod.GET})
-    public String pubRedirect(@PathVariable String url) {
-        StringBuilder role = new StringBuilder();
-        Subject subject = SecurityUtils.getSubject();
-        if (subject.isAuthenticated()) {
-            for (Object o : subject.getPrincipals()) {
-                WrUser s = (WrUser) o;
-                role.append(s.getAccount()).append(",");
-            }
-        }
-        return "redirect : " + url + "\nroles : " + role;
-    }
+//    @RequestMapping(value = "/pub/{url}", method = {RequestMethod.POST, RequestMethod.GET})
+//    public String pubRedirect(@PathVariable String url) {
+//        StringBuilder role = new StringBuilder();
+//        Subject subject = SecurityUtils.getSubject();
+//        if (subject.isAuthenticated()) {
+//            for (Object o : subject.getPrincipals()) {
+//                WrUser s = (WrUser) o;
+//                role.append(s.getAccount()).append(",");
+//            }
+//        }
+//        return "redirect : " + url + "\nroles : " + role;
+//    }
 
     @RequestMapping(value = "/sysmgr/{url}", method = {RequestMethod.POST, RequestMethod.GET})
     public String sysRedirect(@PathVariable String url) {

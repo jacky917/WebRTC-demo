@@ -3,6 +3,7 @@ package com.demo.webrtc.service.impl;
 import com.demo.webrtc.domain.entity.Connection;
 import com.demo.webrtc.service.WebSocketService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
 
 import java.net.Inet4Address;
 import java.net.InetAddress;
@@ -12,6 +13,7 @@ import java.util.Enumeration;
 import java.util.Map;
 
 @Slf4j
+@Service
 public class WebSocketServiceImpl implements WebSocketService {
 
     @Override

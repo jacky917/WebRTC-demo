@@ -5,25 +5,38 @@ import com.demo.webrtc.constant.Constants;
 import com.demo.webrtc.domain.entity.WrUser;
 import com.demo.webrtc.domain.vo.Result;
 import com.demo.webrtc.domain.vo.sysmgr.UserVo;
+import com.demo.webrtc.service.WebSocketService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
-import org.springframework.stereotype.Controller;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.HashMap;
+import java.util.Map;
 
 @Slf4j
-@Controller
+@RestController
 @RequestMapping(value = "/pub")
 public class PubController {
 
-    @ResponseBody
+    @Value("${server.port}")
+    private Integer port;
+
+    private static final String IP_CODE = "127.0.0.1";
+
+    @Autowired
+    WebSocketService webSocketService;
+
     @RequestMapping(value = "/login" ,method = {RequestMethod.POST})
     public Result<String> login(HttpServletResponse response, @Validated UserVo userVo){
 
@@ -49,7 +62,6 @@ public class PubController {
         return new Result<>(true, "login success", userVo.getUsername(), Constants.TOKEN_CHECK_SUCCESS);
     }
 
-    @ResponseBody
     @RequestMapping(value = "/logout" ,method = {RequestMethod.GET,RequestMethod.POST})
     public Result<String> logout(HttpServletResponse response){
         Subject currentUser = SecurityUtils.getSubject();
@@ -66,5 +78,18 @@ public class PubController {
             return new Result<>(true, "logout success", role.toString(), Constants.TOKEN_CHECK_SUCCESS);
         }
         return new Result<>(false,"logout failed", "", Constants.PARAMETERS_MISSING);
+    }
+
+    @GetMapping("/getWebSocketUrl")
+    public Map<String, String> getIpAddress(HttpServletRequest request) {
+        Map<String, String> result = new HashMap<>(1);
+        if(IP_CODE.equals(request.getRemoteAddr())){
+            //本地訪問
+            result.put("url", "ws:"+request.getRemoteAddr()+":"+port+ "/websocket");
+        }else{
+            //公網IP訪問
+            result.put("url", "ws:" + webSocketService.getWebSocketURL() +":"+port+ "/websocket");
+        }
+        return result;
     }
 }
