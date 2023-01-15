@@ -49,11 +49,13 @@ public class FirstShiroRealm extends AuthorizingRealm {
 
         List<WrUserRole> sqlRoles = accountService.findRolesByUserID(user.getId());
 
+
         //TODO 目前直接查出來注入Bean裡面，之後考慮用Redis實現。
         for(WrUserRole role : sqlRoles){
             roles.add(accountService.getRoleByID(role.getId()).getName());
             log.info("Add role: " + accountService.getRoleByID(role.getId()).getName());
         }
+
         return new SimpleAuthorizationInfo(roles);
     }
 

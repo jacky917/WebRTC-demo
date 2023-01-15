@@ -33,6 +33,7 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public WrUser getCurrentUser() {
+
         try{
             Subject currentUser = SecurityUtils.getSubject();
             return findUserBySubject(currentUser);

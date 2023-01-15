@@ -22,8 +22,8 @@ public class ClientIpServletListener implements ServletRequestListener {
 
     @Override
     public void requestInitialized(ServletRequestEvent servletRequestEvent) {
-        HttpServletRequest request=(HttpServletRequest) servletRequestEvent.getServletRequest();
-        HttpSession session=request.getSession();
+        HttpServletRequest request = (HttpServletRequest) servletRequestEvent.getServletRequest();
+        HttpSession session = request.getSession();
         //把HttpServletRequest中的IP地址放入HttpSession中，关键字可任取，此处为clientIp
         session.setAttribute("clientIp", servletRequestEvent.getServletRequest().getRemoteAddr());
     }

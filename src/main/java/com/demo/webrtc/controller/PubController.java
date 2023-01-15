@@ -1,6 +1,4 @@
 package com.demo.webrtc.controller;
-
-
 import com.demo.webrtc.constant.Constants;
 import com.demo.webrtc.domain.entity.WrUser;
 import com.demo.webrtc.domain.vo.Result;
@@ -85,10 +83,10 @@ public class PubController {
         Map<String, String> result = new HashMap<>(1);
         if(IP_CODE.equals(request.getRemoteAddr())){
             //本地訪問
-            result.put("url", "ws:"+request.getRemoteAddr()+":"+port+ "/websocket");
+            result.put("url", "wss:"+request.getRemoteAddr()+":"+port+ "/websocket");
         }else{
             //公網IP訪問
-            result.put("url", "ws:" + webSocketService.getWebSocketURL() +":"+port+ "/websocket");
+            result.put("url", "wss:" + webSocketService.getWebSocketURL() +":"+port+ "/websocket");
         }
         return result;
     }

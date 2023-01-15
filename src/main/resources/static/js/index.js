@@ -40,24 +40,59 @@ let websocket;
 let userId = randomName();
 let roomId;
 let caller = false;
-
 let log;
 
-window.onload = ()=>{
-    //初始化log
-    log = (message) => {
-        let log = document.getElementById("logContent");
-        let oneLog = document.createElement("span");
-        oneLog.innerText = message;
-        let br  = document.createElement("br");
-        log.append(oneLog,br);
-    };
+function whoami(){
+    get("/pub/whoami")
+        .then((data) => {
+            console.log(data)
+        }).catch((error) => {
+        console.log(error)
+    })
+}
 
-    //设定随机名称
-    document.getElementById("showUserId").innerText = userId;
+
+function connect(){
+    //初始化websocket连接
+    get("/pub/getWebSocketUrl")
+        .then((data) => {
+            // if (!websocket) {
+            //     websocket = new WebSocket(data.url);
+            //     log("websocket连接成功")
+            // }
+            websocket.close();
+            websocket = new WebSocket(data.url);
+            log("websocket连接成功")
+            websocket.onopen = () => {
+                websocket.send(JSON.stringify({command:TYPE_COMMAND_ROOM_LIST}))
+            };
+            websocket.onclose = () => {
+                log("Connection closed.");
+            };
+            websocket.onerror = () => {
+                log("websocket error");
+            };
+            websocket.onmessage = handleMessage;
+
+        })
+        .catch((error) => {
+            log(error);
+        });
+}
+
+function logout(){
+    get("/pub/logout")
+        .then((data) => {
+            console.log(data)
+        }).catch((error) => {
+        console.log(error)
+    })
+}
+
+window.onload = ()=>{
 
     //初始化websocket连接
-    get("/getWebSocketUrl")
+    get("/pub/getWebSocketUrl")
         .then((data) => {
             if (!websocket) {
                 websocket = new WebSocket(data.url);
@@ -78,6 +113,19 @@ window.onload = ()=>{
         .catch((error) => {
             log(error);
         });
+
+
+    //初始化log
+    log = (message) => {
+        let log = document.getElementById("logContent");
+        let oneLog = document.createElement("span");
+        oneLog.innerText = message;
+        let br  = document.createElement("br");
+        log.append(oneLog,br);
+    };
+
+    //设定随机名称
+    document.getElementById("showUserId").innerText = userId;
 
     //初始化各种按钮
     document.getElementById("enterRoom").onclick = () =>{

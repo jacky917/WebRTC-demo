@@ -3,6 +3,7 @@ package com.demo.webrtc;
 import com.demo.webrtc.bean.RolePool;
 import com.demo.webrtc.domain.entity.WrRole;
 import com.demo.webrtc.service.AccountService;
+import com.demo.webrtc.service.RoomService;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +12,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.util.HashMap;
 
 @Slf4j
-@SpringBootTest
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class WebRtcApplicationTests {
 
 //    @Autowired
@@ -27,8 +28,6 @@ class WebRtcApplicationTests {
 
     @Autowired
     AccountService accountService;
-
-
 
     @Test
     void AccountServiceTest(){
@@ -57,4 +56,13 @@ class WebRtcApplicationTests {
             log.info(key);
         }
     }
+
+    @Autowired
+    RoomService roomService;
+
+    @Test
+    void roomTest(){
+        System.out.println(roomService.getCurrentOnlineUsers());
+    }
+
 }

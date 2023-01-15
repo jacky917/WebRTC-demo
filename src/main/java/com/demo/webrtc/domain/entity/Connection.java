@@ -1,7 +1,12 @@
 package com.demo.webrtc.domain.entity;
 
+import lombok.Data;
+import lombok.ToString;
+
 import javax.websocket.Session;
 
+@Data
+@ToString
 public class Connection {
 
     /**
