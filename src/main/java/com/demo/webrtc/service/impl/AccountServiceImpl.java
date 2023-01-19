@@ -10,8 +10,6 @@ import com.demo.webrtc.mapper.WrUserMapper;
 import com.demo.webrtc.mapper.WrUserRoleMapper;
 import com.demo.webrtc.service.AccountService;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.UnavailableSecurityManagerException;
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -31,29 +29,30 @@ public class AccountServiceImpl implements AccountService {
     @Autowired
     RolePool rolePool;
 
-    @Override
-    public WrUser getCurrentUser() {
+//    @Override
+//    public WrUser getCurrentUser() {
+//
+//        try{
+//            Subject currentUser = SecurityUtils.getSubject();
+//            return findUserBySubject(currentUser);
+//        }catch (UnavailableSecurityManagerException e){
+//            log.error("請通過Controller調用此方法");
+//            log.error(String.valueOf(e));
+//            return null;
+//        }
+//    }
+//
+//    @Override
+//    public WrUser findUserBySubject(Subject subject) {
+//        if(subject.isAuthenticated()){
+//            for (Object o : subject.getPrincipals()) {
+//                return (WrUser)o;
+//            }
+//        }
+//        // 未登入
+//        return null;
+//    }
 
-        try{
-            Subject currentUser = SecurityUtils.getSubject();
-            return findUserBySubject(currentUser);
-        }catch (UnavailableSecurityManagerException e){
-            log.error("請通過Controller調用此方法");
-            log.error(String.valueOf(e));
-            return null;
-        }
-    }
-
-    @Override
-    public WrUser findUserBySubject(Subject subject) {
-        if(subject.isAuthenticated()){
-            for (Object o : subject.getPrincipals()) {
-                return (WrUser)o;
-            }
-        }
-        // 未登入
-        return null;
-    }
 
     @Override
     public WrUser findUserByUserID(String userID) {

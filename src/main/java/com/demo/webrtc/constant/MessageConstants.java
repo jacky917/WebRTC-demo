@@ -1,15 +1,11 @@
 package com.demo.webrtc.constant;
 
-public class WebSocket {
+public class MessageConstants {
 
     /**
-     * 創建房間
+     * 獲取在線用戶
      */
-    public static final String TYPE_COMMAND_ROOM_ENTER = "enterRoom";
-    /**
-     * 獲取房間
-     */
-    public static final String TYPE_COMMAND_ROOM_LIST = "roomList";
+    public static final String TYPE_COMMAND_USER_LIST = "userList";
     /**
      * 對話
      */

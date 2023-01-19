@@ -10,18 +10,18 @@ import java.util.List;
 
 public interface AccountService {
 
-    /**
-     * 根據當前Shiro Subject獲取當前用戶對象
-     * @return WrUser 返回一個用戶實體對象
-     */
-    WrUser getCurrentUser();
-
-    /**
-     * 根據Shiro Subject獲取用戶對象
-     * @param subject Shiro Subject
-     * @return WrUser 返回一個用戶實體對象
-     */
-    WrUser findUserBySubject(Subject subject);
+//    /**
+//     * 根據當前Shiro Subject獲取當前用戶對象
+//     * @return WrUser 返回一個用戶實體對象
+//     */
+//    WrUser getCurrentUser();
+//
+//    /**
+//     * 根據Shiro Subject獲取用戶對象
+//     * @param subject Shiro Subject
+//     * @return WrUser 返回一個用戶實體對象
+//     */
+//    WrUser findUserBySubject(Subject subject);
 
     /**
      * 根據用戶ID查詢

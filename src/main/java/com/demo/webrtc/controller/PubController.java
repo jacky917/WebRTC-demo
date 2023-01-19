@@ -1,4 +1,5 @@
 package com.demo.webrtc.controller;
+
 import com.demo.webrtc.constant.Constants;
 import com.demo.webrtc.domain.entity.WrUser;
 import com.demo.webrtc.domain.vo.Result;
@@ -12,19 +13,14 @@ import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.HashMap;
-import java.util.Map;
 
 @Slf4j
 @RestController
-@RequestMapping(value = "/pub")
+@RequestMapping(value = "/api/pub")
 public class PubController {
 
     @Value("${server.port}")
@@ -36,7 +32,7 @@ public class PubController {
     WebSocketService webSocketService;
 
     @RequestMapping(value = "/login" ,method = {RequestMethod.POST})
-    public Result<String> login(HttpServletResponse response, @Validated UserVo userVo){
+    public Result<String> login(@RequestBody @Validated UserVo userVo){
 
         log.info(String.valueOf(userVo));
 //        log.info("====================================");
@@ -60,6 +56,31 @@ public class PubController {
         return new Result<>(true, "login success", userVo.getUsername(), Constants.TOKEN_CHECK_SUCCESS);
     }
 
+//    @RequestMapping(value = "/login" ,method = {RequestMethod.POST})
+//    public Result<String> login(HttpServletResponse response, @Validated UserVo userVo){
+//
+//        log.info(String.valueOf(userVo));
+////        log.info("====================================");
+////        log.info("Username = " + userVo.getUsername());
+////        log.info("Password = " + userVo.getPassword());
+////        log.info("====================================");
+//        Subject currentUser = SecurityUtils.getSubject();
+//        if(!currentUser.isAuthenticated()){
+//            UsernamePasswordToken token = new UsernamePasswordToken(userVo.getUsername(),userVo.getPassword());
+//            token.setRememberMe(Boolean.parseBoolean(userVo.getRemember()));
+//            try{
+//                currentUser.login(token);
+//            }catch (AuthenticationException ae){
+//                log.info("登入失敗 AuthenticationException " + ae.getMessage());
+//                return new Result<>(false, "wrong account or password", null, Constants.PARAMETERS_MISSING);
+//            }catch (Exception e){
+//                log.info("登入失敗 Exception " + e.getMessage());
+//                return new Result<>(false, "login failed", null, Constants.SERVER_ERROR);
+//            }
+//        }
+//        return new Result<>(true, "login success", userVo.getUsername(), Constants.TOKEN_CHECK_SUCCESS);
+//    }
+
     @RequestMapping(value = "/logout" ,method = {RequestMethod.GET,RequestMethod.POST})
     public Result<String> logout(HttpServletResponse response){
         Subject currentUser = SecurityUtils.getSubject();
@@ -79,15 +100,15 @@ public class PubController {
     }
 
     @GetMapping("/getWebSocketUrl")
-    public Map<String, String> getIpAddress(HttpServletRequest request) {
-        Map<String, String> result = new HashMap<>(1);
+    public Result<String> getIpAddress(HttpServletRequest request) {
+        String url = "";
         if(IP_CODE.equals(request.getRemoteAddr())){
             //本地訪問
-            result.put("url", "wss:"+request.getRemoteAddr()+":"+port+ "/websocket");
+            url =  "wss:"+request.getRemoteAddr()+":"+port+ "/websocket";
         }else{
             //公網IP訪問
-            result.put("url", "wss:" + webSocketService.getWebSocketURL() +":"+port+ "/websocket");
+            url =  "wss:" + webSocketService.getWebSocketURL() +":"+port+ "/websocket";
         }
-        return result;
+        return new Result<>(true, "getWebSocketUrl success", url, Constants.TOKEN_CHECK_SUCCESS);
     }
 }

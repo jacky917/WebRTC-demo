@@ -3,7 +3,7 @@ package com.demo.webrtc;
 import com.demo.webrtc.bean.RolePool;
 import com.demo.webrtc.domain.entity.WrRole;
 import com.demo.webrtc.service.AccountService;
-import com.demo.webrtc.service.RoomService;
+import com.demo.webrtc.service.ConnectionService;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,11 +58,11 @@ class WebRtcApplicationTests {
     }
 
     @Autowired
-    RoomService roomService;
+    ConnectionService connectionService;
 
     @Test
     void roomTest(){
-        System.out.println(roomService.getCurrentOnlineUsers());
+        System.out.println(connectionService.getAllConnections());
     }
 
 }

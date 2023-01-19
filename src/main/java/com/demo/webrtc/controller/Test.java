@@ -1,15 +1,14 @@
 package com.demo.webrtc.controller;
 
+import com.demo.webrtc.config.shiro.ShiroKit;
 import com.demo.webrtc.constant.Constants;
 import com.demo.webrtc.domain.entity.WrUser;
 import com.demo.webrtc.domain.vo.Result;
-import com.demo.webrtc.service.AccountService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @Slf4j
@@ -17,12 +16,10 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/")
 public class Test {
 
-    @Autowired
-    AccountService accountService;
 
-    @RequestMapping(value = "/pub/whoami", method = {RequestMethod.POST, RequestMethod.GET})
+    @RequestMapping(value = "/api/pub/whoami", method = {RequestMethod.POST, RequestMethod.GET})
     public Result<String> pubRedirect() {
-        WrUser user = accountService.getCurrentUser();
+        WrUser user = ShiroKit.getCurrentUser();
         System.out.println((user != null) ? user.getAccount() : null);
         return new Result<>(true, "whoami", (user != null) ? user.getAccount() : null, Constants.TOKEN_CHECK_SUCCESS);
     }
@@ -51,7 +48,7 @@ public class Test {
         return "redirect : " + url;
     }
 
-    @RequestMapping(value = "/pub/loginTest", method = {RequestMethod.POST, RequestMethod.GET})
+    @RequestMapping(value = "/api/pub/loginTest", method = {RequestMethod.POST, RequestMethod.GET})
     public Result<String> login(@RequestParam("username") String username,
                                 @RequestParam("password") String password) {
 
